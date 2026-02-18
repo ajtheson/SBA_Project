@@ -19,10 +19,9 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     // Public endpoints that don't require authentication
+    // TODO: Remove /api/** after implementing JWT authentication in Phase 3
     private static final String[] PUBLIC_ENDPOINTS = {
-        "/api/auth/**",
-        "/api/subjects/public/**",
-        "/api/subjects/featured",
+        "/api/**",  // Temporarily allow all API endpoints (Phase 2 - no auth yet)
         "/swagger-ui/**",
         "/swagger-ui.html",
         "/api-docs/**",
