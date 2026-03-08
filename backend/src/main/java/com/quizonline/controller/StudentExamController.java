@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -65,6 +66,30 @@ public class StudentExamController {
             int studentId = extractStudentId(request);
             boolean isSubmitted = studentExamService.checkSubmissionStatus(submissionId, studentId);
             return ResponseEntity.ok(Map.of("isSubmit", isSubmitted));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(new ApiResponse(false, e.getMessage()));
+        }
+    }
+
+    // --- Get submission history for student ---
+    @GetMapping("/history")
+    public ResponseEntity<?> getSubmissionHistory(HttpServletRequest request) {
+        try {
+            int studentId = extractStudentId(request);
+            List<SubmissionResponse> submissions = studentExamService.getSubmissionHistory(studentId);
+            return ResponseEntity.ok(submissions);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(new ApiResponse(false, e.getMessage()));
+        }
+    }
+
+    // --- Get submission detail / review ---
+    @GetMapping("/submissions/{submissionId}")
+    public ResponseEntity<?> getSubmissionDetail(@PathVariable int submissionId, HttpServletRequest request) {
+        try {
+            int studentId = extractStudentId(request);
+            SubmissionDetailResponse detail = studentExamService.getSubmissionDetail(submissionId, studentId);
+            return ResponseEntity.ok(detail);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(new ApiResponse(false, e.getMessage()));
         }

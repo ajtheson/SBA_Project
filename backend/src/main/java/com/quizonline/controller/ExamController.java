@@ -1,11 +1,7 @@
 package com.quizonline.controller;
 
 import com.quizonline.config.JwtUtil;
-import com.quizonline.dto.ApiResponse;
-import com.quizonline.dto.ExamRequest;
-import com.quizonline.dto.ExamResponse;
-import com.quizonline.dto.ExamResultResponse;
-import com.quizonline.dto.SubmissionResponse;
+import com.quizonline.dto.*;
 import com.quizonline.service.ExamService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -127,6 +123,18 @@ public class ExamController {
             int teacherId = extractTeacherId(request);
             List<SubmissionResponse> subs = examService.getOnGoingDetail(id, teacherId);
             return ResponseEntity.ok(subs);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(new ApiResponse(false, e.getMessage()));
+        }
+    }
+
+    // --- View submission detail (teacher always sees full review) ---
+    @GetMapping("/submissions/{submissionId}")
+    public ResponseEntity<?> getSubmissionDetail(@PathVariable int submissionId, HttpServletRequest request) {
+        try {
+            int teacherId = extractTeacherId(request);
+            SubmissionDetailResponse detail = examService.getSubmissionDetail(submissionId, teacherId);
+            return ResponseEntity.ok(detail);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(new ApiResponse(false, e.getMessage()));
         }

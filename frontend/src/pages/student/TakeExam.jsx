@@ -216,6 +216,9 @@ export default function TakeExam() {
           <button onClick={() => navigate('/student/join')} className="btn btn-primary">
             Back to Join Exam
           </button>
+          <button onClick={() => navigate(`/student/submissions/${result.submissionId}`)} className="btn btn-secondary" style={{ marginLeft: '10px' }}>
+            View Detail
+          </button>
         </div>
       </div>
     );

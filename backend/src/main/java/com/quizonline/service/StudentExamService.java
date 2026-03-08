@@ -235,4 +235,97 @@ public class StudentExamService {
         }
         return Boolean.TRUE.equals(submission.getIsSubmit());
     }
+
+    // === SUBMISSION HISTORY (list all submitted exams for student) ===
+
+    public List<SubmissionResponse> getSubmissionHistory(int studentId) {
+        List<Submission> submissions = submissionRepository.getSubmissionOfStudent(studentId);
+        return submissions.stream().map(s -> {
+            SubmissionResponse res = new SubmissionResponse();
+            res.setSubmissionId(s.getSubmissionId());
+            res.setSubmitTime(s.getSubmitTime());
+            res.setDuration(s.getDuration());
+            res.setSelected(s.getSelected());
+            res.setCorrectAnswers(s.getCorrectAnswers());
+            res.setScore(s.getScore() != null ? s.getScore().doubleValue() : null);
+            res.setIsSubmit(s.getIsSubmit());
+            res.setExamName(s.getExam().getExamName());
+            res.setExamId(s.getExam().getExamId());
+            res.setIsReview(s.getExam().getIsReview());
+            return res;
+        }).collect(Collectors.toList());
+    }
+
+    // === SUBMISSION DETAIL / REVIEW ===
+
+    public SubmissionDetailResponse getSubmissionDetail(int submissionId, int studentId) {
+        Submission submission = submissionRepository.findById(submissionId)
+                .orElseThrow(() -> new RuntimeException("Submission not found"));
+
+        if (!submission.getStudent().getStudentId().equals(studentId)) {
+            throw new RuntimeException("Not authorized");
+        }
+        if (!Boolean.TRUE.equals(submission.getIsSubmit())) {
+            throw new RuntimeException("Submission not yet submitted");
+        }
+
+        Exam exam = submission.getExam();
+        boolean allowReview = Boolean.TRUE.equals(exam.getIsReview());
+
+        if (!allowReview) {
+            throw new RuntimeException("Review is not enabled for this exam");
+        }
+
+        // Load answers
+        List<Answer> answers = answerRepository.getAnswersOfSubmission(submissionId);
+
+        List<AnswerDetailDTO> answerDTOs = answers.stream().map(a -> {
+            Question question = a.getQuestion();
+            AnswerDetailDTO dto = new AnswerDetailDTO();
+            dto.setQuestionId(question.getQuestionId());
+            dto.setQuestionContent(question.getContent());
+            dto.setIsMultipleChoice(question.getIsMultipleChoice());
+            dto.setIsCorrect(a.getIsCorrect());
+
+            // Parse student's selected choice IDs
+            Set<Integer> selectedIds = new HashSet<>();
+            if (a.getStudentChoice() != null && !a.getStudentChoice().isEmpty()) {
+                for (String s : a.getStudentChoice().trim().split("\\s+")) {
+                    try { selectedIds.add(Integer.parseInt(s)); } catch (NumberFormatException ignored) {}
+                }
+            }
+
+            // Load choices for this question
+            List<Choice> choices = choiceRepository.findByQuestionId(question.getQuestionId());
+            List<ChoiceDetailDTO> choiceDTOs = choices.stream().map(c -> {
+                ChoiceDetailDTO cdto = new ChoiceDetailDTO();
+                cdto.setChoiceId(c.getChoiceId());
+                cdto.setChoiceContent(c.getChoiceContent());
+                cdto.setIsSelected(selectedIds.contains(c.getChoiceId()));
+                // Only expose correct answer if review is allowed
+                cdto.setIsCorrectChoice(allowReview ? c.getIsCorrectChoice() : null);
+                return cdto;
+            }).collect(Collectors.toList());
+
+            dto.setChoices(choiceDTOs);
+            return dto;
+        }).collect(Collectors.toList());
+
+        // Count total questions from quiz (not just answered)
+        List<Question> allQuestions = questionRepository.findByQuizId(exam.getQuiz().getQuizId());
+
+        SubmissionDetailResponse response = new SubmissionDetailResponse();
+        response.setSubmissionId(submissionId);
+        response.setExamName(exam.getExamName());
+        response.setExamId(exam.getExamId());
+        response.setSubmitTime(submission.getSubmitTime());
+        response.setDuration(submission.getDuration());
+        response.setSelected(submission.getSelected());
+        response.setCorrectAnswers(submission.getCorrectAnswers());
+        response.setTotalQuestions(allQuestions.size());
+        response.setScore(submission.getScore() != null ? submission.getScore().doubleValue() : null);
+        response.setIsReview(allowReview);
+        response.setAnswers(answerDTOs);
+        return response;
+    }
 }

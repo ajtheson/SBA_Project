@@ -105,6 +105,7 @@ export default function ExamResults() {
                       Duration {sortField === 'duration' && (sortDir === 'asc' ? '↑' : '↓')}
                     </th>
                     <th>Submit Time</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -117,6 +118,11 @@ export default function ExamResults() {
                       <td>{sub.correctAnswers}/{sub.selected}</td>
                       <td>{formatDuration(sub.duration)}</td>
                       <td>{formatDateTime(sub.submitTime)}</td>
+                      <td>
+                        <Link to={`/teacher/submissions/${sub.submissionId}`} className="btn btn-sm btn-primary">
+                          View Detail
+                        </Link>
+                      </td>
                     </tr>
                   ))}
                 </tbody>

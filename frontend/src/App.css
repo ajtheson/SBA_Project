@@ -568,3 +568,143 @@ tr:hover { background: #f8f9fa; }
   margin-bottom: 20px;
   color: #1a1a2e;
 }
+
+/* ========== Phase 5: Submission Review ========== */
+
+.review-legend {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding: 12px 16px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.legend-dot {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+}
+.legend-dot.correct { background: #d4edda; border: 2px solid #28a745; }
+.legend-dot.wrong { background: #f8d7da; border: 2px solid #dc3545; }
+.legend-dot.missed { background: #fff3cd; border: 2px solid #ffc107; }
+
+.review-notice {
+  padding: 12px 16px;
+  background: #e2e3e5;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  color: #383d41;
+  font-size: 0.9rem;
+}
+
+.review-questions {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.review-question-card {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 20px;
+  border-left: 4px solid #dee2e6;
+}
+.review-question-card.card-correct {
+  border-left-color: #28a745;
+}
+.review-question-card.card-wrong {
+  border-left-color: #dc3545;
+}
+.review-question-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.question-number {
+  font-weight: 600;
+  color: #333;
+}
+.question-status {
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+.question-status.status-correct {
+  background: #d4edda;
+  color: #155724;
+}
+.question-status.status-wrong {
+  background: #f8d7da;
+  color: #721c24;
+}
+.badge-multiple {
+  font-size: 0.75rem;
+  background: #e2e3e5;
+  color: #383d41;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-left: auto;
+}
+.review-question-content {
+  font-size: 1rem;
+  margin-bottom: 12px;
+  color: #333;
+}
+.review-choices {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.review-choice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 6px;
+  border: 1px solid #e0e0e0;
+  font-size: 0.95rem;
+}
+.review-choice.choice-selected {
+  background: #e8eaf6;
+  border-color: #3f51b5;
+}
+.review-choice.choice-correct {
+  background: #d4edda;
+  border-color: #28a745;
+}
+.review-choice.choice-wrong {
+  background: #f8d7da;
+  border-color: #dc3545;
+}
+.review-choice.choice-missed {
+  background: #fff3cd;
+  border-color: #ffc107;
+}
+.choice-indicator {
+  font-size: 1.1rem;
+  color: #666;
+  flex-shrink: 0;
+}
+.choice-text {
+  flex: 1;
+}
+.correct-badge {
+  color: #28a745;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+.text-muted {
+  color: #999;
+  font-size: 0.85rem;
+  font-style: italic;
+}
