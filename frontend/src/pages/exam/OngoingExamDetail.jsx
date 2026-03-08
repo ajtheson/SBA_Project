@@ -50,7 +50,7 @@ export default function OngoingExamDetail() {
     <div className="page-container">
       <div className="page-header">
         <h2>{examName ? `Exam: ${examName}` : 'Ongoing Exam Detail'}</h2>
-        <Link to="/teacher/exams" className="btn btn-secondary">Back to Exams</Link>
+        <Link to="/teacher/exams/ongoing" className="btn btn-secondary">Back to Exams</Link>
       </div>
 
       {message && <div className="success-message">{message}</div>}

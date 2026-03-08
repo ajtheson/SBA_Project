@@ -62,7 +62,7 @@ export default function CreateExam() {
         attempts: parseInt(form.attempts),
         isReview: form.isReview,
       });
-      navigate('/teacher/exams');
+      navigate('/teacher/exams/ongoing');
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to create exam');
     } finally {
@@ -74,7 +74,7 @@ export default function CreateExam() {
     <div className="page-container">
       <div className="page-header">
         <h2>Create Exam</h2>
-        <Link to="/teacher/exams" className="btn btn-secondary">Back to Exams</Link>
+        <Link to="/teacher/exams/ongoing" className="btn btn-secondary">Back to Exams</Link>
       </div>
 
       {error && <div className="error-message">{error}</div>}

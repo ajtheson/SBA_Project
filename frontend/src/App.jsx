@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
+import Layout from './components/Layout';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 import RegisterStudent from './pages/auth/RegisterStudent';
@@ -18,6 +19,10 @@ import CreateExam from './pages/exam/CreateExam';
 import ExamResults from './pages/exam/ExamResults';
 import OngoingExamDetail from './pages/exam/OngoingExamDetail';
 import TeacherSubmissionDetail from './pages/exam/TeacherSubmissionDetail';
+import TeacherDashboard from './pages/dashboard/TeacherDashboard';
+import StudentDashboard from './pages/dashboard/StudentDashboard';
+import TeacherSettings from './pages/settings/TeacherSettings';
+import StudentSettings from './pages/settings/StudentSettings';
 import JoinExam from './pages/student/JoinExam';
 import TakeExam from './pages/student/TakeExam';
 import SubmissionHistory from './pages/student/SubmissionHistory';
@@ -30,7 +35,7 @@ function App() {
       <Router>
         <div className="App">
           <Routes>
-            {/* Auth routes */}
+            {/* Auth routes (no sidebar) */}
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/register/student" element={<RegisterStudent />} />
@@ -39,25 +44,27 @@ function App() {
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
 
-            {/* Teacher Quiz routes */}
-            <Route path="/teacher/quizzes" element={<ProtectedRoute role="teacher"><QuizList /></ProtectedRoute>} />
-            <Route path="/teacher/quizzes/create" element={<ProtectedRoute role="teacher"><CreateQuiz /></ProtectedRoute>} />
-            <Route path="/teacher/quizzes/:id" element={<ProtectedRoute role="teacher"><ViewQuiz /></ProtectedRoute>} />
-            <Route path="/teacher/quizzes/:id/edit" element={<ProtectedRoute role="teacher"><UpdateQuiz /></ProtectedRoute>} />
+            {/* Teacher routes (with sidebar) */}
+            <Route path="/teacher/dashboard" element={<ProtectedRoute role="teacher"><Layout><TeacherDashboard /></Layout></ProtectedRoute>} />
+            <Route path="/teacher/quizzes" element={<ProtectedRoute role="teacher"><Layout><QuizList /></Layout></ProtectedRoute>} />
+            <Route path="/teacher/quizzes/create" element={<ProtectedRoute role="teacher"><Layout><CreateQuiz /></Layout></ProtectedRoute>} />
+            <Route path="/teacher/quizzes/:id" element={<ProtectedRoute role="teacher"><Layout><ViewQuiz /></Layout></ProtectedRoute>} />
+            <Route path="/teacher/quizzes/:id/edit" element={<ProtectedRoute role="teacher"><Layout><UpdateQuiz /></Layout></ProtectedRoute>} />
+            <Route path="/teacher/exams/ongoing" element={<ProtectedRoute role="teacher"><Layout><OngoingExams /></Layout></ProtectedRoute>} />
+            <Route path="/teacher/exams/create" element={<ProtectedRoute role="teacher"><Layout><CreateExam /></Layout></ProtectedRoute>} />
+            <Route path="/teacher/exams/completed" element={<ProtectedRoute role="teacher"><Layout><CompletedExams /></Layout></ProtectedRoute>} />
+            <Route path="/teacher/exams/:id/results" element={<ProtectedRoute role="teacher"><Layout><ExamResults /></Layout></ProtectedRoute>} />
+            <Route path="/teacher/exams/ongoing/:id/detail" element={<ProtectedRoute role="teacher"><Layout><OngoingExamDetail /></Layout></ProtectedRoute>} />
+            <Route path="/teacher/submissions/:submissionId" element={<ProtectedRoute role="teacher"><Layout><TeacherSubmissionDetail /></Layout></ProtectedRoute>} />
+            <Route path="/teacher/settings" element={<ProtectedRoute role="teacher"><Layout><TeacherSettings /></Layout></ProtectedRoute>} />
 
-            {/* Teacher Exam routes */}
-            <Route path="/teacher/exams" element={<ProtectedRoute role="teacher"><OngoingExams /></ProtectedRoute>} />
-            <Route path="/teacher/exams/create" element={<ProtectedRoute role="teacher"><CreateExam /></ProtectedRoute>} />
-            <Route path="/teacher/exams/completed" element={<ProtectedRoute role="teacher"><CompletedExams /></ProtectedRoute>} />
-            <Route path="/teacher/exams/:id/results" element={<ProtectedRoute role="teacher"><ExamResults /></ProtectedRoute>} />
-            <Route path="/teacher/exams/ongoing/:id/detail" element={<ProtectedRoute role="teacher"><OngoingExamDetail /></ProtectedRoute>} />
-            <Route path="/teacher/submissions/:submissionId" element={<ProtectedRoute role="teacher"><TeacherSubmissionDetail /></ProtectedRoute>} />
-
-            {/* Student Exam routes */}
-            <Route path="/student/join" element={<ProtectedRoute role="student"><JoinExam /></ProtectedRoute>} />
-            <Route path="/student/exams/:examId/take" element={<ProtectedRoute role="student"><TakeExam /></ProtectedRoute>} />
-            <Route path="/student/submissions" element={<ProtectedRoute role="student"><SubmissionHistory /></ProtectedRoute>} />
-            <Route path="/student/submissions/:submissionId" element={<ProtectedRoute role="student"><SubmissionDetail /></ProtectedRoute>} />
+            {/* Student routes (with sidebar) */}
+            <Route path="/student/dashboard" element={<ProtectedRoute role="student"><Layout><StudentDashboard /></Layout></ProtectedRoute>} />
+            <Route path="/student/join" element={<ProtectedRoute role="student"><Layout><JoinExam /></Layout></ProtectedRoute>} />
+            <Route path="/student/exams/:examId/take" element={<ProtectedRoute role="student"><Layout><TakeExam /></Layout></ProtectedRoute>} />
+            <Route path="/student/submissions" element={<ProtectedRoute role="student"><Layout><SubmissionHistory /></Layout></ProtectedRoute>} />
+            <Route path="/student/submissions/:submissionId" element={<ProtectedRoute role="student"><Layout><SubmissionDetail /></Layout></ProtectedRoute>} />
+            <Route path="/student/settings" element={<ProtectedRoute role="student"><Layout><StudentSettings /></Layout></ProtectedRoute>} />
 
             {/* Default redirect */}
             <Route path="/" element={<Navigate to="/login" />} />
