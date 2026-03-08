@@ -16,7 +16,7 @@ export default function Login() {
     try {
       const data = await login(email, password, role);
       if (data.role === 'teacher') {
-        navigate('/teacher/dashboard');
+        navigate('/teacher/quizzes');
       } else {
         navigate('/student/join-exam');
       }

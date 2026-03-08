@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 import RegisterStudent from './pages/auth/RegisterStudent';
@@ -7,6 +8,10 @@ import RegisterTeacher from './pages/auth/RegisterTeacher';
 import Activate from './pages/auth/Activate';
 import ForgotPassword from './pages/auth/ForgotPassword';
 import ResetPassword from './pages/auth/ResetPassword';
+import QuizList from './pages/quiz/QuizList';
+import CreateQuiz from './pages/quiz/CreateQuiz';
+import ViewQuiz from './pages/quiz/ViewQuiz';
+import UpdateQuiz from './pages/quiz/UpdateQuiz';
 import './App.css';
 
 function App() {
@@ -23,6 +28,12 @@ function App() {
             <Route path="/activate" element={<Activate />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
+
+            {/* Teacher Quiz routes */}
+            <Route path="/teacher/quizzes" element={<ProtectedRoute role="teacher"><QuizList /></ProtectedRoute>} />
+            <Route path="/teacher/quizzes/create" element={<ProtectedRoute role="teacher"><CreateQuiz /></ProtectedRoute>} />
+            <Route path="/teacher/quizzes/:id" element={<ProtectedRoute role="teacher"><ViewQuiz /></ProtectedRoute>} />
+            <Route path="/teacher/quizzes/:id/edit" element={<ProtectedRoute role="teacher"><UpdateQuiz /></ProtectedRoute>} />
 
             {/* Default redirect */}
             <Route path="/" element={<Navigate to="/login" />} />
