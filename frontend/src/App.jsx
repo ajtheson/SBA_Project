@@ -12,6 +12,11 @@ import QuizList from './pages/quiz/QuizList';
 import CreateQuiz from './pages/quiz/CreateQuiz';
 import ViewQuiz from './pages/quiz/ViewQuiz';
 import UpdateQuiz from './pages/quiz/UpdateQuiz';
+import OngoingExams from './pages/exam/OngoingExams';
+import CompletedExams from './pages/exam/CompletedExams';
+import CreateExam from './pages/exam/CreateExam';
+import ExamResults from './pages/exam/ExamResults';
+import OngoingExamDetail from './pages/exam/OngoingExamDetail';
 import './App.css';
 
 function App() {
@@ -34,6 +39,13 @@ function App() {
             <Route path="/teacher/quizzes/create" element={<ProtectedRoute role="teacher"><CreateQuiz /></ProtectedRoute>} />
             <Route path="/teacher/quizzes/:id" element={<ProtectedRoute role="teacher"><ViewQuiz /></ProtectedRoute>} />
             <Route path="/teacher/quizzes/:id/edit" element={<ProtectedRoute role="teacher"><UpdateQuiz /></ProtectedRoute>} />
+
+            {/* Teacher Exam routes */}
+            <Route path="/teacher/exams" element={<ProtectedRoute role="teacher"><OngoingExams /></ProtectedRoute>} />
+            <Route path="/teacher/exams/create" element={<ProtectedRoute role="teacher"><CreateExam /></ProtectedRoute>} />
+            <Route path="/teacher/exams/completed" element={<ProtectedRoute role="teacher"><CompletedExams /></ProtectedRoute>} />
+            <Route path="/teacher/exams/:id/results" element={<ProtectedRoute role="teacher"><ExamResults /></ProtectedRoute>} />
+            <Route path="/teacher/exams/ongoing/:id/detail" element={<ProtectedRoute role="teacher"><OngoingExamDetail /></ProtectedRoute>} />
 
             {/* Default redirect */}
             <Route path="/" element={<Navigate to="/login" />} />
