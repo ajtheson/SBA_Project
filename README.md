@@ -1,56 +1,71 @@
-# Quiz Practicing System
+# Quiz Online System
 
-Hệ thống luyện tập trắc nghiệm trực tuyến.
+Hệ thống thi trắc nghiệm trực tuyến - cho phép giáo viên tạo bài quiz, đề thi và học sinh tham gia làm bài.
 
-## Mô tả
+## Tech Stack
 
-Ứng dụng web full-stack với các chức năng:
+| Layer     | Technology                          |
+|-----------|-------------------------------------|
+| Front-End | ReactJS (Vite)                      |
+| Back-End  | Spring Boot 3.2 (RESTful API)       |
+| Database  | SQL Server + JPA/Hibernate          |
+| Security  | Spring Security (Authentication + Authorization) |
 
-- Customer: Đăng ký khóa học, làm quiz
-- Expert: Quản lý bài giảng, câu hỏi
-- Sale: Quản lý đăng ký
-- Admin: Quản lý hệ thống
+## Cấu trúc thư mục
 
-## Công nghệ
-
-- Backend: Spring Boot 3.2.2, Java 17, SQL Server, JPA, Spring Security + JWT
-- Frontend: React 18, Vite, React Router, Axios
+```
+SBA_Project/
+├── docs/                  # Tài liệu thiết kế (Use Case, ERD, DDL)
+│   ├── database/          # DDL.sql, InsertData.sql
+│   └── usecase/           # Use Case Diagram
+├── backend/               # Spring Boot project (Maven)
+│   ├── pom.xml
+│   └── src/main/java/com/quizonline/
+│       ├── config/        # Cấu hình (Security, CORS, ...)
+│       ├── controller/    # REST Controllers
+│       ├── dto/           # Data Transfer Objects
+│       ├── entity/        # JPA Entities
+│       ├── repository/    # JPA Repositories
+│       └── service/       # Business Logic
+├── frontend/              # ReactJS project (Vite)
+│   ├── package.json
+│   └── src/
+│       ├── api/           # Axios instance
+│       ├── components/    # Reusable components
+│       ├── context/       # React Context (auth, ...)
+│       ├── pages/         # Page components
+│       └── services/      # API service functions
+└── README.md
+```
 
 ## Yêu cầu
 
-- Java 17+
-- Node.js 18+
-- SQL Server 2019+
-- Maven 3.8+
+- **Java 17+**
+- **Node.js 20+**
+- **SQL Server** (đang chạy, database `QuizOnlineSystem` đã tạo)
+- **Maven 3.9+** (có sẵn trong `apache-maven-3.9.12/`)
 
 ## Hướng dẫn chạy
 
 ### 1. Database
 
-Chạy 2 file SQL theo thứ tự:
-
-1. `docs/database/ddl_official.sql` - Tạo database
-2. `docs/database/dml_official.sql` - Thêm dữ liệu mẫu
+Chạy file `docs/database/DDL.sql` trong SQL Server Management Studio để tạo database và các bảng.  
+_(Tuỳ chọn)_ Chạy `docs/database/InsertData.sql` để thêm dữ liệu mẫu.
 
 ### 2. Backend
 
 ```bash
 cd backend
+
+# Cập nhật thông tin kết nối SQL Server trong:
+# src/main/resources/application.properties
+# (username, password, port)
+
+# Chạy ứng dụng
+../apache-maven-3.9.12/bin/mvn spring-boot:run
 ```
 
-Sửa file `src/main/resources/application.properties`:
-
-```properties
-spring.datasource.password=YOUR_PASSWORD
-```
-
-Chạy:
-
-```bash
-mvn spring-boot:run
-```
-
-Truy cập: http://localhost:8080
+Backend sẽ chạy tại: `http://localhost:8080`
 
 ### 3. Frontend
 
@@ -60,13 +75,4 @@ npm install
 npm run dev
 ```
 
-Truy cập: http://localhost:5173
-
-## Tài khoản test
-
-| Role     | Email               | Password |
-| -------- | ------------------- | -------- |
-| Admin    | admin@gmail.com     | Pass123@ |
-| Expert   | expert1@example.com | Pass123@ |
-| Customer | alice@example.com   | Pass123@ |
-| Sale     | sale1@example.com   | Pass123@ |
+Frontend sẽ chạy tại: `http://localhost:5173`
