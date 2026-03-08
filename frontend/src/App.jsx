@@ -17,6 +17,8 @@ import CompletedExams from './pages/exam/CompletedExams';
 import CreateExam from './pages/exam/CreateExam';
 import ExamResults from './pages/exam/ExamResults';
 import OngoingExamDetail from './pages/exam/OngoingExamDetail';
+import JoinExam from './pages/student/JoinExam';
+import TakeExam from './pages/student/TakeExam';
 import './App.css';
 
 function App() {
@@ -46,6 +48,10 @@ function App() {
             <Route path="/teacher/exams/completed" element={<ProtectedRoute role="teacher"><CompletedExams /></ProtectedRoute>} />
             <Route path="/teacher/exams/:id/results" element={<ProtectedRoute role="teacher"><ExamResults /></ProtectedRoute>} />
             <Route path="/teacher/exams/ongoing/:id/detail" element={<ProtectedRoute role="teacher"><OngoingExamDetail /></ProtectedRoute>} />
+
+            {/* Student Exam routes */}
+            <Route path="/student/join" element={<ProtectedRoute role="student"><JoinExam /></ProtectedRoute>} />
+            <Route path="/student/exams/:examId/take" element={<ProtectedRoute role="student"><TakeExam /></ProtectedRoute>} />
 
             {/* Default redirect */}
             <Route path="/" element={<Navigate to="/login" />} />

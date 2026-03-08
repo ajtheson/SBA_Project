@@ -18,7 +18,7 @@ export default function Login() {
       if (data.role === 'teacher') {
         navigate('/teacher/quizzes');
       } else {
-        navigate('/student/join-exam');
+        navigate('/student/join');
       }
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');
