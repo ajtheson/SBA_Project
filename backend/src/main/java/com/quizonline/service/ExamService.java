@@ -12,6 +12,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.Set;
+import java.util.HashSet;
 
 @Service
 public class ExamService {
@@ -157,6 +159,72 @@ public class ExamService {
             throw new RuntimeException("Not authorized");
         }
         submissionRepository.forceSubmit(submissionId);
+    }
+
+    // === SUBMISSION DETAIL (Teacher - always full review) ===
+
+    public SubmissionDetailResponse getSubmissionDetail(int submissionId, int teacherId) {
+        Submission submission = submissionRepository.findById(submissionId)
+                .orElseThrow(() -> new RuntimeException("Submission not found"));
+
+        Exam exam = submission.getExam();
+        if (!exam.getQuiz().getTeacher().getTeacherId().equals(teacherId)) {
+            throw new RuntimeException("Not authorized");
+        }
+        if (!Boolean.TRUE.equals(submission.getIsSubmit())) {
+            throw new RuntimeException("Submission not yet submitted");
+        }
+
+        List<Answer> answers = answerRepository.getAnswersOfSubmission(submissionId);
+
+        List<AnswerDetailDTO> answerDTOs = answers.stream().map(a -> {
+            Question question = a.getQuestion();
+            AnswerDetailDTO dto = new AnswerDetailDTO();
+            dto.setQuestionId(question.getQuestionId());
+            dto.setQuestionContent(question.getContent());
+            dto.setIsMultipleChoice(question.getIsMultipleChoice());
+            dto.setIsCorrect(a.getIsCorrect());
+
+            Set<Integer> selectedIds = new HashSet<>();
+            if (a.getStudentChoice() != null && !a.getStudentChoice().isEmpty()) {
+                for (String s : a.getStudentChoice().trim().split("\\s+")) {
+                    try { selectedIds.add(Integer.parseInt(s)); } catch (NumberFormatException ignored) {}
+                }
+            }
+
+            List<Choice> choices = choiceRepository.findByQuestionId(question.getQuestionId());
+            List<ChoiceDetailDTO> choiceDTOs = choices.stream().map(c -> {
+                ChoiceDetailDTO cdto = new ChoiceDetailDTO();
+                cdto.setChoiceId(c.getChoiceId());
+                cdto.setChoiceContent(c.getChoiceContent());
+                cdto.setIsSelected(selectedIds.contains(c.getChoiceId()));
+                cdto.setIsCorrectChoice(c.getIsCorrectChoice());
+                return cdto;
+            }).collect(Collectors.toList());
+
+            dto.setChoices(choiceDTOs);
+            return dto;
+        }).collect(Collectors.toList());
+
+        List<Question> allQuestions = questionRepository.findByQuizId(exam.getQuiz().getQuizId());
+
+        Student student = studentRepository.findById(submission.getStudent().getStudentId()).orElse(null);
+
+        SubmissionDetailResponse response = new SubmissionDetailResponse();
+        response.setSubmissionId(submissionId);
+        response.setExamName(exam.getExamName());
+        response.setExamId(exam.getExamId());
+        response.setSubmitTime(submission.getSubmitTime());
+        response.setDuration(submission.getDuration());
+        response.setSelected(submission.getSelected());
+        response.setCorrectAnswers(submission.getCorrectAnswers());
+        response.setTotalQuestions(allQuestions.size());
+        response.setScore(submission.getScore() != null ? submission.getScore().doubleValue() : null);
+        response.setIsReview(true);
+        response.setStudentName(student != null ? student.getFullname() : null);
+        response.setStudentEmail(student != null ? student.getEmail() : null);
+        response.setAnswers(answerDTOs);
+        return response;
     }
 
     // === Dashboard counts ===

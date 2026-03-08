@@ -60,7 +60,7 @@ export default function CompletedExams() {
       <div className="page-header">
         <h2>Completed Exams</h2>
         <div className="header-actions">
-          <Link to="/teacher/exams" className="btn btn-secondary">Ongoing Exams</Link>
+          <Link to="/teacher/exams/ongoing" className="btn btn-secondary">Ongoing Exams</Link>
         </div>
       </div>
 

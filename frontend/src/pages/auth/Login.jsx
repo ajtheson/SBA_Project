@@ -16,9 +16,9 @@ export default function Login() {
     try {
       const data = await login(email, password, role);
       if (data.role === 'teacher') {
-        navigate('/teacher/quizzes');
+        navigate('/teacher/dashboard');
       } else {
-        navigate('/student/join-exam');
+        navigate('/student/dashboard');
       }
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');

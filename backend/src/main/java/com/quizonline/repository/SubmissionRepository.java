@@ -32,6 +32,13 @@ public interface SubmissionRepository extends JpaRepository<Submission, Integer>
     @Query("SELECT COUNT(s) FROM Submission s WHERE s.isSubmit = true AND s.exam.quiz.teacher.teacherId = :teacherId")
     int submissionCount(int teacherId);
 
+    // Student dashboard counts
+    @Query("SELECT COUNT(s) FROM Submission s WHERE s.student.studentId = :studentId AND s.isSubmit = true")
+    int countStudentSubmissions(int studentId);
+
+    @Query("SELECT COUNT(DISTINCT s.exam.examId) FROM Submission s WHERE s.student.studentId = :studentId AND s.isSubmit = true")
+    int countStudentExams(int studentId);
+
     // Force submit
     @Modifying
     @Transactional

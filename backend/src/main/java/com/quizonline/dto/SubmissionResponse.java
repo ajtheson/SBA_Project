@@ -18,4 +18,5 @@ public class SubmissionResponse {
     private Integer studentId;
     private String examName;
     private Integer examId;
+    private Boolean isReview;
 }
