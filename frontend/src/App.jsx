@@ -1,29 +1,59 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import { ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
-import HomePage from './pages/HomePage'
-import RolesPage from './pages/RolesPage'
-import CategoriesPage from './pages/CategoriesPage'
-import TestTypesPage from './pages/TestTypesPage'
-import QuestionLevelsPage from './pages/QuestionLevelsPage'
-import LessonTypesPage from './pages/LessonTypesPage'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
+import Login from './pages/auth/Login';
+import Register from './pages/auth/Register';
+import RegisterStudent from './pages/auth/RegisterStudent';
+import RegisterTeacher from './pages/auth/RegisterTeacher';
+import Activate from './pages/auth/Activate';
+import ForgotPassword from './pages/auth/ForgotPassword';
+import ResetPassword from './pages/auth/ResetPassword';
+import QuizList from './pages/quiz/QuizList';
+import CreateQuiz from './pages/quiz/CreateQuiz';
+import ViewQuiz from './pages/quiz/ViewQuiz';
+import UpdateQuiz from './pages/quiz/UpdateQuiz';
+import OngoingExams from './pages/exam/OngoingExams';
+import CompletedExams from './pages/exam/CompletedExams';
+import CreateExam from './pages/exam/CreateExam';
+import ExamResults from './pages/exam/ExamResults';
+import OngoingExamDetail from './pages/exam/OngoingExamDetail';
+import './App.css';
 
 function App() {
   return (
-    <Router>
-      <div className="App">
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/settings/roles" element={<RolesPage />} />
-          <Route path="/settings/categories" element={<CategoriesPage />} />
-          <Route path="/settings/test-types" element={<TestTypesPage />} />
-          <Route path="/settings/question-levels" element={<QuestionLevelsPage />} />
-          <Route path="/settings/lesson-types" element={<LessonTypesPage />} />
-        </Routes>
-        <ToastContainer position="top-right" autoClose={3000} />
-      </div>
-    </Router>
-  )
+    <AuthProvider>
+      <Router>
+        <div className="App">
+          <Routes>
+            {/* Auth routes */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/register/student" element={<RegisterStudent />} />
+            <Route path="/register/teacher" element={<RegisterTeacher />} />
+            <Route path="/activate" element={<Activate />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+
+            {/* Teacher Quiz routes */}
+            <Route path="/teacher/quizzes" element={<ProtectedRoute role="teacher"><QuizList /></ProtectedRoute>} />
+            <Route path="/teacher/quizzes/create" element={<ProtectedRoute role="teacher"><CreateQuiz /></ProtectedRoute>} />
+            <Route path="/teacher/quizzes/:id" element={<ProtectedRoute role="teacher"><ViewQuiz /></ProtectedRoute>} />
+            <Route path="/teacher/quizzes/:id/edit" element={<ProtectedRoute role="teacher"><UpdateQuiz /></ProtectedRoute>} />
+
+            {/* Teacher Exam routes */}
+            <Route path="/teacher/exams" element={<ProtectedRoute role="teacher"><OngoingExams /></ProtectedRoute>} />
+            <Route path="/teacher/exams/create" element={<ProtectedRoute role="teacher"><CreateExam /></ProtectedRoute>} />
+            <Route path="/teacher/exams/completed" element={<ProtectedRoute role="teacher"><CompletedExams /></ProtectedRoute>} />
+            <Route path="/teacher/exams/:id/results" element={<ProtectedRoute role="teacher"><ExamResults /></ProtectedRoute>} />
+            <Route path="/teacher/exams/ongoing/:id/detail" element={<ProtectedRoute role="teacher"><OngoingExamDetail /></ProtectedRoute>} />
+
+            {/* Default redirect */}
+            <Route path="/" element={<Navigate to="/login" />} />
+          </Routes>
+        </div>
+      </Router>
+    </AuthProvider>
+  );
 }
 
-export default App
+export default App;
