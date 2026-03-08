@@ -12,7 +12,7 @@ use QuizOnlineSystem
 create table Teacher(
 	teacherID int identity primary key,
 	email varchar(255),
-	password varchar(50),
+	password varchar(255),
 	fullname varchar(50),
 	school varchar(255)
 )
@@ -20,7 +20,7 @@ create table Teacher(
 create table Student(
 	studentID int identity primary key,
 	email varchar(255),
-	password varchar(50),
+	password varchar(255),
 	fullname varchar(50),
 	className varchar(50),
 	school varchar(255)
