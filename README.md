@@ -40,10 +40,10 @@ SBA_Project/
 
 ## Yêu cầu
 
-- **Java 17+**
+- **Java 21+**
 - **Node.js 20+**
 - **SQL Server** (đang chạy, database `QuizOnlineSystem` đã tạo)
-- **Maven 3.9+** (có sẵn trong `apache-maven-3.9.12/`)
+- **Maven Wrapper** (có sẵn trong `backend/`)
 
 ## Hướng dẫn chạy
 
@@ -62,7 +62,11 @@ cd backend
 # (username, password, port)
 
 # Chạy ứng dụng
-../apache-maven-3.9.12/bin/mvn spring-boot:run
+# Windows
+.\mvnw.cmd spring-boot:run
+
+# macOS/Linux
+./mvnw spring-boot:run
 ```
 
 Backend sẽ chạy tại: `http://localhost:8080`
